@@ -1,0 +1,21 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "allowJs": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "moduleResolution": "bundler"
+  },
+  "include": [
+    "App.js",
+    "src/**/*",
+    "scripts/**/*",
+    "datamatriz/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

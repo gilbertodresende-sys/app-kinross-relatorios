@@ -1,102 +1,80 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import ModuleCard from '../components/ModuleCard';
-import ScreenContainer from '../components/ScreenContainer';
-import colors from '../theme/colors';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-export default function HomeScreen({ onOpenWeather }) {
-  const modules = [
-    {
-      title: 'Previsão do Tempo',
-      subtitle: 'Consultar cidade e data',
-      status: 'Disponível agora',
-      action: onOpenWeather,
-      primary: true,
-    },
-    {
-      title: 'Relatório de Turno',
-      subtitle: 'Em breve',
-      status: 'Próximo módulo',
-      disabled: true,
-    },
-    {
-      title: 'Falhas e Pendências',
-      subtitle: 'Em breve',
-      status: 'Próximo módulo',
-      disabled: true,
-    },
-    {
-      title: 'Matriz de Isolamento',
-      subtitle: 'Em breve',
-      status: 'Próximo módulo',
-      disabled: true,
-    },
-    {
-      title: 'Visualização de OS',
-      subtitle: 'Em breve',
-      status: 'Próximo módulo',
-      disabled: true,
-    },
-  ];
-
+export default function HomeScreen({ onOpenWeather, onOpenMatrizIsolamento }) {
   return (
-    <ScreenContainer>
-      <StatusBar barStyle="dark-content" />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>App Operacional</Text>
+          <Text style={styles.subtitle}>
+            Selecione uma funcionalidade disponível.
+          </Text>
+        </View>
 
-      <View style={styles.heroCard}>
-        <Text style={styles.heroEyebrow}>TURNOAPP</Text>
-        <Text style={styles.heroTitle}>Central de aplicativos do turno</Text>
-        <Text style={styles.heroText}>
-          Selecione abaixo a ferramenta que deseja abrir. Esta tela será o ponto
-          de entrada dos próximos apps que vamos criar.
-        </Text>
-      </View>
+        <Pressable style={styles.card} onPress={onOpenWeather}>
+          <Text style={styles.cardTitle}>Previsão do Tempo</Text>
+          <Text style={styles.cardDescription}>
+            Consultar condições climáticas e previsão para apoio operacional.
+          </Text>
+        </Pressable>
 
-      <Text style={styles.sectionTitle}>Aplicativos</Text>
-
-      {modules.map((module) => (
-        <ModuleCard
-          key={module.title}
-          title={module.title}
-          subtitle={module.subtitle}
-          status={module.status}
-          onPress={module.action}
-          disabled={module.disabled}
-          primary={module.primary}
-        />
-      ))}
-    </ScreenContainer>
+        <Pressable style={styles.card} onPress={onOpenMatrizIsolamento}>
+          <Text style={styles.cardTitle}>Matriz de Isolamento</Text>
+          <Text style={styles.cardDescription}>
+            Consultar fontes de energia, pontos de bloqueio, forma de isolamento e PDF oficial da matriz.
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  heroCard: {
-    backgroundColor: colors.navy,
-    borderRadius: 20,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F3F6F9',
+  },
+  content: {
     padding: 20,
+    gap: 16,
   },
-  heroEyebrow: {
-    color: colors.goldLight,
-    fontWeight: '800',
-    fontSize: 12,
-    letterSpacing: 1.2,
-    marginBottom: 10,
+  header: {
+    marginTop: 12,
+    marginBottom: 8,
   },
-  heroTitle: {
-    color: colors.white,
+  title: {
     fontSize: 28,
-    fontWeight: '800',
-    marginBottom: 10,
-  },
-  heroText: {
-    color: '#D7E0E8',
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  sectionTitle: {
-    color: colors.text,
-    fontSize: 20,
     fontWeight: '700',
-    marginTop: 4,
+    color: '#0F3B63',
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#5B6773',
+    marginTop: 6,
+    lineHeight: 21,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#D9E1E8',
+    shadowColor: '#000000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#0F3B63',
+    marginBottom: 8,
+  },
+  cardDescription: {
+    color: '#5B6773',
+    lineHeight: 21,
+    fontSize: 14,
   },
 });

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SplashScreen from './src/components/SplashScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import WeatherScreen from './src/screens/WeatherScreen';
+import MatrizIsolamentoScreen from './src/features/matriz-isolamento/screens/MatrizIsolamentoScreen';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -15,5 +16,14 @@ export default function App() {
     return <WeatherScreen onBack={() => setActiveScreen('home')} />;
   }
 
-  return <HomeScreen onOpenWeather={() => setActiveScreen('weather')} />;
+  if (activeScreen === 'matriz-isolamento') {
+    return <MatrizIsolamentoScreen onBack={() => setActiveScreen('home')} />;
+  }
+
+  return (
+    <HomeScreen
+      onOpenWeather={() => setActiveScreen('weather')}
+      onOpenMatrizIsolamento={() => setActiveScreen('matriz-isolamento')}
+    />
+  );
 }

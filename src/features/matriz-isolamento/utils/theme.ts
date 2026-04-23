@@ -1,0 +1,32 @@
+export const matrizTheme = {
+  colors: {
+    primary: '#0F3B63',
+    primaryDark: '#0A2A46',
+    primaryLight: '#DCEAF7',
+    accent: '#C69214',
+    successBg: '#EAF6EE',
+    warningBg: '#FFF8E6',
+    dangerBg: '#FDECEC',
+    background: '#F3F6F9',
+    card: '#FFFFFF',
+    border: '#D9E1E8',
+    text: '#16202A',
+    textSecondary: '#5B6773',
+    textMuted: '#7A8794',
+    white: '#FFFFFF',
+    shadow: '#000000',
+  },
+  spacing: {
+    xs: 6,
+    sm: 10,
+    md: 16,
+    lg: 20,
+    xl: 24,
+  },
+  radius: {
+    sm: 10,
+    md: 14,
+    lg: 18,
+    xl: 24,
+  },
+};

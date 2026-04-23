@@ -3,3 +3,7 @@ node_modules/
 dist/
 web-build/
 turnoapp.zip
+
+# Fontes locais de matriz
+Matriz_Isolamento_Eletrica_P2.xlsx
+Matriz_Isolamento_Instrumentação_P2.xlsx
