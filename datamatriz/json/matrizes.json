@@ -1,0 +1,31 @@
+{
+  "version": "2025-09-26",
+  "updatedAt": "2025-09-26T18:00:00Z",
+  "matrices": [
+    {
+      "id": "eletrica-15-SE-501",
+      "code": "15-SE-501",
+      "name": "15-SE-501",
+      "supervisao": "eletrica",
+      "area": "15 - SE - 501",
+      "revision": "10",
+      "updatedAt": "2025-09-25",
+      "pdfPath": "datamatriz/pdf/eletrica/15-SE-501.pdf",
+      "items": [
+        {
+          "itemNumber": 1,
+          "equipment": "15QF501",
+          "equipmentSearchKey": "15qf501",
+          "energies": ["Elétrica"],
+          "isolationTargets": [
+            "ISOLAR CUB-05 DO 43QF501A",
+            "ISOLAR CUB-03 DO 15CM501"
+          ],
+          "procedures": [
+            "Efetuar isolamento conforme procedimento PROC-PO-0812 - Isolamento de energia."
+          ]
+        }
+      ]
+    }
+  ]
+}

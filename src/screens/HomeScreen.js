@@ -25,6 +25,18 @@ export default function HomeScreen({ onOpenWeather }) {
       status: 'Próximo módulo',
       disabled: true,
     },
+    {
+      title: 'Matriz de Isolamento',
+      subtitle: 'Em breve',
+      status: 'Próximo módulo',
+      disabled: true,
+    },
+    {
+      title: 'Visualização de OS',
+      subtitle: 'Em breve',
+      status: 'Próximo módulo',
+      disabled: true,
+    },
   ];
 
   return (
