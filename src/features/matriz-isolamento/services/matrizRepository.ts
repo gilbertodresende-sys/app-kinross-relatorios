@@ -7,7 +7,7 @@ import {
   MatrizItem,
   MatrizesDatabase,
 } from '../types/matriz.types';
-import { normalizeSearchText } from '../utils/normalizeText';
+import { normalizeEquipmentCode } from '../utils/normalizeText';
 
 const STORAGE_KEYS = {
   dbVersion: 'matriz_db_version',
@@ -132,13 +132,13 @@ export const matrizRepository = {
     const matrix = await this.getMatrixById(matrixId);
     if (!matrix) return null;
 
-    const key = normalizeSearchText(equipment);
+    const key = normalizeEquipmentCode(equipment);
 
     return (
       matrix.items.find(
         (item) =>
-          normalizeSearchText(item.equipment) === key ||
-          normalizeSearchText(item.equipmentSearchKey) === key,
+          normalizeEquipmentCode(item.equipment) === key ||
+          normalizeEquipmentCode(item.equipmentSearchKey) === key,
       ) ?? null
     );
   },

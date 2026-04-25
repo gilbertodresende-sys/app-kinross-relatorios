@@ -1,6 +1,3 @@
-import { Platform } from 'react-native';
-import * as FileSystem from 'expo-file-system/legacy';
-import * as IntentLauncher from 'expo-intent-launcher';
 import * as Linking from 'expo-linking';
 
 import { MatrizArquivo } from '../types/matriz.types';
@@ -10,23 +7,18 @@ const bundledManifest = require('../../../../datamatriz/manifest/manifest.json')
   pdfBaseUrl?: string;
 };
 
-function getFileNameFromPath(path: string): string {
-  const parts = path.split('/');
-  return parts[parts.length - 1];
-}
+function buildPdfUrl(matrix: MatrizArquivo): string | null {
+  if (!matrix.pdfPath) return null;
 
-async function openLocalPdf(uri: string): Promise<void> {
-  if (Platform.OS === 'android') {
-    const contentUri = await FileSystem.getContentUriAsync(uri);
-    await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-      data: contentUri,
-      flags: 1,
-      type: 'application/pdf',
-    });
-    return;
+  if (/^https?:\/\//i.test(matrix.pdfPath)) {
+    return matrix.pdfPath;
   }
 
-  await Linking.openURL(uri);
+  if (matrix.pdfPath.startsWith('/')) {
+    return matrix.pdfPath;
+  }
+
+  return `/${matrix.pdfPath.replace(/^\/+/, '')}`;
 }
 
 export const matrizPdfService = {
@@ -35,27 +27,31 @@ export const matrizPdfService = {
       throw new Error('PDF oficial não configurado para esta matriz.');
     }
 
-    if (/^https?:\/\//i.test(matrix.pdfPath)) {
-      await Linking.openURL(matrix.pdfPath);
-      return;
-    }
+    const directUrl = buildPdfUrl(matrix);
 
-    const localBundledPath = matrix.pdfPath;
-    const localInfo = await FileSystem.getInfoAsync(localBundledPath);
-
-    if (localInfo.exists) {
-      await openLocalPdf(localBundledPath);
-      return;
+    if (directUrl) {
+      try {
+        await Linking.openURL(directUrl);
+        return;
+      } catch (error) {
+        console.warn('Falha ao abrir PDF por caminho direto:', error);
+      }
     }
 
     if (bundledManifest.pdfBaseUrl) {
-      const fileName = getFileNameFromPath(matrix.pdfPath);
+      const fileName = matrix.pdfPath.split('/').pop();
+      if (!fileName) {
+        throw new Error('Nome do arquivo PDF inválido.');
+      }
+
       const remotePdfUrl = `${bundledManifest.pdfBaseUrl.replace(/\/$/, '')}/${fileName}`;
       const downloadedUri = await matrizSyncService.downloadPdfIfConfigured(remotePdfUrl, fileName);
-      await openLocalPdf(downloadedUri);
+      await Linking.openURL(downloadedUri);
       return;
     }
 
-    throw new Error('PDF oficial indisponível neste dispositivo.');
+    throw new Error(
+      'PDF oficial não encontrado. Para teste no web, coloque os PDFs em /public/datamatriz/pdf/... ou configure pdfBaseUrl no manifest.',
+    );
   },
 };

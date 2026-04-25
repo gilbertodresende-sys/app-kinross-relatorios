@@ -28,11 +28,15 @@ export function EquipmentSearch({
       <TextInput
         value={query}
         onChangeText={onQueryChange}
-        placeholder="Digite código ou nome do equipamento"
+        placeholder="Ex.: AA-EE-SSSSS"
         style={styles.input}
         autoCapitalize="characters"
         placeholderTextColor={matrizTheme.colors.textMuted}
       />
+
+      <Text style={styles.helper}>
+        Digite o código do equipamento no padrão AA-EE-SSSSS. A busca aceita também sem hífens.
+      </Text>
 
       <Text style={styles.label}>Selecionar equipamento</Text>
       <View style={styles.pickerContainer}>
@@ -48,7 +52,9 @@ export function EquipmentSearch({
       </View>
 
       <Text style={styles.helper}>
-        Use a busca para localizar rapidamente o equipamento na matriz selecionada.
+        {options.length
+          ? `${options.length} equipamento(s) encontrado(s) para o filtro atual.`
+          : 'Nenhum equipamento encontrado para o filtro informado.'}
       </Text>
     </View>
   );
@@ -98,6 +104,7 @@ const styles = StyleSheet.create({
   helper: {
     fontSize: 12,
     color: matrizTheme.colors.textSecondary,
-    marginTop: 4,
+    marginTop: 2,
+    lineHeight: 18,
   },
 });

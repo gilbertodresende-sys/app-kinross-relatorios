@@ -1,6 +1,6 @@
 {
-  "version": "2026-04-23",
-  "updatedAt": "2026-04-23T21:40:12.704Z",
+  "version": "2026-04-25",
+  "updatedAt": "2026-04-25T15:53:58.823Z",
   "matrices": [
     {
       "id": "eletrica-13-SE-501",
@@ -10,7 +10,117 @@
       "area": "13 - SE - 501",
       "revision": "09",
       "updatedAt": "10 / 07 / 2025",
-      "pdfPath": "datamatriz/pdf/eletrica/13-SE-501.pdf",
+      "pdfPath": "/datamatriz/pdf/eletrica/13-SE-501.pdf",
+      "equipmentCount": 0
+    },
+    {
+      "id": "eletrica-15-SE-501",
+      "code": "15-SE-501",
+      "name": "15-SE-501",
+      "supervisao": "eletrica",
+      "area": "15 - SE - 501",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/15-SE-501.pdf",
+      "equipmentCount": 44
+    },
+    {
+      "id": "eletrica-16-SE-501",
+      "code": "16-SE-501",
+      "name": "16-SE-501",
+      "supervisao": "eletrica",
+      "area": "16 - SE - 501",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/16-SE-501.pdf",
+      "equipmentCount": 63
+    },
+    {
+      "id": "eletrica-26-SE-501",
+      "code": "26-SE-501",
+      "name": "26-SE-501",
+      "supervisao": "eletrica",
+      "area": "26 - SE - 501",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/26-SE-501.pdf",
+      "equipmentCount": 173
+    },
+    {
+      "id": "eletrica-26-SE-502",
+      "code": "26-SE-502",
+      "name": "26-SE-502",
+      "supervisao": "eletrica",
+      "area": "26 - SE - 502",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/26-SE-502.pdf",
+      "equipmentCount": 40
+    },
+    {
+      "id": "eletrica-26-SE-503",
+      "code": "26-SE-503",
+      "name": "26-SE-503",
+      "supervisao": "eletrica",
+      "area": "26 - SE - 503",
+      "revision": "10",
+      "updatedAt": "",
+      "pdfPath": "/datamatriz/pdf/eletrica/26-SE-503.pdf",
+      "equipmentCount": 59
+    },
+    {
+      "id": "eletrica-26-SE-504",
+      "code": "26-SE-504",
+      "name": "26-SE-504",
+      "supervisao": "eletrica",
+      "area": "26 - SE - 504",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/26-SE-504.pdf",
+      "equipmentCount": 30
+    },
+    {
+      "id": "eletrica-27-SE-501",
+      "code": "27-SE-501",
+      "name": "27-SE-501",
+      "supervisao": "eletrica",
+      "area": "27 - SE - 501",
+      "revision": "10",
+      "updatedAt": "",
+      "pdfPath": "/datamatriz/pdf/eletrica/27-SE-501.pdf",
+      "equipmentCount": 130
+    },
+    {
+      "id": "eletrica-27-SE-502",
+      "code": "27-SE-502",
+      "name": "27-SE-502",
+      "supervisao": "eletrica",
+      "area": "27 - SE - 502",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/27-SE-502.pdf",
+      "equipmentCount": 37
+    },
+    {
+      "id": "eletrica-42-SE-501",
+      "code": "42-SE-501",
+      "name": "42-SE-501",
+      "supervisao": "eletrica",
+      "area": "42 - SE - 501",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/42-SE-501.pdf",
+      "equipmentCount": 50
+    },
+    {
+      "id": "eletrica-43-SE-501",
+      "code": "43-SE-501",
+      "name": "43-SE-501",
+      "supervisao": "eletrica",
+      "area": "43 - SE - 501",
+      "revision": "10",
+      "updatedAt": "25/09/2025",
+      "pdfPath": "/datamatriz/pdf/eletrica/43-SE-501.pdf",
       "equipmentCount": 25
     },
     {
@@ -21,19 +131,8 @@
       "area": "13-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/13-SE-501.pdf",
-      "equipmentCount": 27
-    },
-    {
-      "id": "eletrica-15-SE-501",
-      "code": "15-SE-501",
-      "name": "15-SE-501",
-      "supervisao": "eletrica",
-      "area": "15 - SE - 501",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/15-SE-501.pdf",
-      "equipmentCount": 167
+      "pdfPath": "/datamatriz/pdf/instrumentacao/13-SE-501.pdf",
+      "equipmentCount": 0
     },
     {
       "id": "instrumentacao-15-SE-501",
@@ -43,19 +142,8 @@
       "area": "15-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/15-SE-501.pdf",
-      "equipmentCount": 38
-    },
-    {
-      "id": "eletrica-16-SE-501",
-      "code": "16-SE-501",
-      "name": "16-SE-501",
-      "supervisao": "eletrica",
-      "area": "16 - SE - 501",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/16-SE-501.pdf",
-      "equipmentCount": 347
+      "pdfPath": "/datamatriz/pdf/instrumentacao/15-SE-501.pdf",
+      "equipmentCount": 4
     },
     {
       "id": "instrumentacao-16-SE-501",
@@ -65,19 +153,8 @@
       "area": "16-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/16-SE-501.pdf",
-      "equipmentCount": 75
-    },
-    {
-      "id": "eletrica-26-SE-501",
-      "code": "26-SE-501",
-      "name": "26-SE-501",
-      "supervisao": "eletrica",
-      "area": "26 - SE - 501",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/26-SE-501.pdf",
-      "equipmentCount": 1184
+      "pdfPath": "/datamatriz/pdf/instrumentacao/16-SE-501.pdf",
+      "equipmentCount": 8
     },
     {
       "id": "instrumentacao-26-SE-501",
@@ -87,19 +164,8 @@
       "area": "26-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/26-SE-501.pdf",
-      "equipmentCount": 357
-    },
-    {
-      "id": "eletrica-26-SE-502",
-      "code": "26-SE-502",
-      "name": "26-SE-502",
-      "supervisao": "eletrica",
-      "area": "26 - SE - 502",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/26-SE-502.pdf",
-      "equipmentCount": 106
+      "pdfPath": "/datamatriz/pdf/instrumentacao/26-SE-501.pdf",
+      "equipmentCount": 69
     },
     {
       "id": "instrumentacao-26-SE-502",
@@ -109,19 +175,8 @@
       "area": "26-SE-502 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/26-SE-502.pdf",
-      "equipmentCount": 29
-    },
-    {
-      "id": "eletrica-26-SE-503",
-      "code": "26-SE-503",
-      "name": "26-SE-503",
-      "supervisao": "eletrica",
-      "area": "26 - SE - 503",
-      "revision": "10",
-      "updatedAt": "",
-      "pdfPath": "datamatriz/pdf/eletrica/26-SE-503.pdf",
-      "equipmentCount": 222
+      "pdfPath": "/datamatriz/pdf/instrumentacao/26-SE-502.pdf",
+      "equipmentCount": 2
     },
     {
       "id": "instrumentacao-26-SE-503",
@@ -131,19 +186,8 @@
       "area": "26-SE-503 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/26-SE-503.pdf",
-      "equipmentCount": 165
-    },
-    {
-      "id": "eletrica-26-SE-504",
-      "code": "26-SE-504",
-      "name": "26-SE-504",
-      "supervisao": "eletrica",
-      "area": "26 - SE - 504",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/26-SE-504.pdf",
-      "equipmentCount": 240
+      "pdfPath": "/datamatriz/pdf/instrumentacao/26-SE-503.pdf",
+      "equipmentCount": 39
     },
     {
       "id": "instrumentacao-26-SE-504",
@@ -153,19 +197,8 @@
       "area": "26-SE-504 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/26-SE-504.pdf",
-      "equipmentCount": 159
-    },
-    {
-      "id": "eletrica-27-SE-501",
-      "code": "27-SE-501",
-      "name": "27-SE-501",
-      "supervisao": "eletrica",
-      "area": "27 - SE - 501",
-      "revision": "10",
-      "updatedAt": "",
-      "pdfPath": "datamatriz/pdf/eletrica/27-SE-501.pdf",
-      "equipmentCount": 1526
+      "pdfPath": "/datamatriz/pdf/instrumentacao/26-SE-504.pdf",
+      "equipmentCount": 39
     },
     {
       "id": "instrumentacao-27-SE-501",
@@ -175,19 +208,8 @@
       "area": "27-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/27-SE-501.pdf",
-      "equipmentCount": 238
-    },
-    {
-      "id": "eletrica-27-SE-502",
-      "code": "27-SE-502",
-      "name": "27-SE-502",
-      "supervisao": "eletrica",
-      "area": "27 - SE - 502",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/27-SE-502.pdf",
-      "equipmentCount": 122
+      "pdfPath": "/datamatriz/pdf/instrumentacao/27-SE-501.pdf",
+      "equipmentCount": 53
     },
     {
       "id": "instrumentacao-27-SE-502",
@@ -197,19 +219,8 @@
       "area": "27-SE-502 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/27-SE-502.pdf",
-      "equipmentCount": 117
-    },
-    {
-      "id": "eletrica-42-SE-501",
-      "code": "42-SE-501",
-      "name": "42-SE-501",
-      "supervisao": "eletrica",
-      "area": "42 - SE - 501",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/42-SE-501.pdf",
-      "equipmentCount": 206
+      "pdfPath": "/datamatriz/pdf/instrumentacao/27-SE-502.pdf",
+      "equipmentCount": 41
     },
     {
       "id": "instrumentacao-42-SE-501",
@@ -219,19 +230,8 @@
       "area": "42-SE-501 INSTRUMENTAÇÃO",
       "revision": "10",
       "updatedAt": "26/09/2025",
-      "pdfPath": "datamatriz/pdf/instrumentacao/42-SE-501.pdf",
-      "equipmentCount": 148
-    },
-    {
-      "id": "eletrica-43-SE-501",
-      "code": "43-SE-501",
-      "name": "43-SE-501",
-      "supervisao": "eletrica",
-      "area": "43 - SE - 501",
-      "revision": "10",
-      "updatedAt": "25/09/2025",
-      "pdfPath": "datamatriz/pdf/eletrica/43-SE-501.pdf",
-      "equipmentCount": 236
+      "pdfPath": "/datamatriz/pdf/instrumentacao/42-SE-501.pdf",
+      "equipmentCount": 38
     }
   ]
 }

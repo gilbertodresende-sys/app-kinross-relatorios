@@ -14,6 +14,13 @@ export function normalizeSearchText(value: string): string {
     .trim();
 }
 
+export function normalizeEquipmentCode(value: string): string {
+  return stripAccents(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
 export function splitMultilineText(value?: string | null): string[] {
   if (!value) return [];
 

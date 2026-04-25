@@ -10,6 +10,7 @@ import {
 import { matrizRepository } from '../services/matrizRepository';
 import { buildEquipmentOptions } from '../utils/buildEquipmentOptions';
 import { filterEquipment } from '../utils/filterEquipment';
+import { normalizeEquipmentCode } from '../utils/normalizeText';
 
 export function useMatrizData() {
   const [catalog, setCatalog] = useState<MatrizCatalogoItem[]>([]);
@@ -39,7 +40,7 @@ export function useMatrizData() {
     return catalog
       .filter((item) => item.supervisao === selectedSupervisao)
       .map((item) => ({
-        label: `${item.code} (${item.equipmentCount} equipamentos)`,
+        label: `${item.code} (${item.equipmentCount})`,
         value: item.id,
       }));
   }, [catalog, selectedSupervisao]);
@@ -82,6 +83,25 @@ export function useMatrizData() {
   const equipmentOptions = useMemo<OptionItem[]>(() => {
     return buildEquipmentOptions(filteredItems);
   }, [filteredItems]);
+
+  useEffect(() => {
+    if (!equipmentQuery.trim()) return;
+
+    const queryKey = normalizeEquipmentCode(equipmentQuery);
+
+    const exactMatch = filteredItems.find(
+      (item) => normalizeEquipmentCode(item.equipment) === queryKey,
+    );
+
+    if (exactMatch) {
+      setSelectedEquipment(exactMatch.equipment);
+      return;
+    }
+
+    if (filteredItems.length === 1) {
+      setSelectedEquipment(filteredItems[0].equipment);
+    }
+  }, [equipmentQuery, filteredItems]);
 
   useEffect(() => {
     if (!selectedEquipment || !selectedMatrixId) {

@@ -6,7 +6,7 @@ export default function HomeScreen({ onOpenWeather, onOpenMatrizIsolamento }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>App Operacional</Text>
+          <Text style={styles.title}>Manutenção Elétrica Planta 2</Text>
           <Text style={styles.subtitle}>
             Selecione uma funcionalidade disponível.
           </Text>

@@ -72,6 +72,13 @@ function normalizeSearchText(value: string): string {
     .trim();
 }
 
+function normalizeEquipmentCode(value: string): string {
+  return stripAccents(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
 function splitMultilineText(value: string): string[] {
   return normalizeWhitespace(value)
     .split('\n')
@@ -102,23 +109,49 @@ function cellToString(value: unknown): string {
   return normalizeWhitespace(String(value));
 }
 
-function findHeaderRows(rows: string[][]): number[] {
-  const result: number[] = [];
+function looksLikeEquipmentCode(value: string): boolean {
+  const raw = normalizeWhitespace(value);
+  if (!raw) return false;
 
-  rows.forEach((row, index) => {
-    const rowText = normalizeSearchText(row.join(' | '));
+  const normalized = normalizeEquipmentCode(raw);
+  if (!normalized) return false;
 
-    const isHeader =
-      rowText.includes('onde vou trabalhar') &&
-      rowText.includes('energias existentes') &&
-      rowText.includes('o que devera ser isolado');
+  const hasLetter = /[a-z]/i.test(raw);
+  const hasNumber = /\d/.test(raw);
+  const hasSpace = /\s/.test(raw);
 
-    if (isHeader) {
-      result.push(index);
-    }
-  });
+  if (!hasLetter || !hasNumber) return false;
+  if (hasSpace) return false;
+  if (normalized.length < 4) return false;
 
-  return result;
+  const invalidTerms = [
+    'registro',
+    'ondevoutrabalhar',
+    'energiasexistentes',
+    'oquedeveraserisolado',
+    'comofazer',
+    'equipemultidisciplinar',
+    'responsaveldesignado',
+    'referenciabibliografica',
+    'aprovacaodamatriz',
+    'definicoesdasenergias',
+  ];
+
+  if (invalidTerms.some((term) => normalized.includes(term))) {
+    return false;
+  }
+
+  return true;
+}
+
+function isHeaderRow(row: string[]): boolean {
+  const rowText = normalizeSearchText(row.join(' | '));
+
+  return (
+    rowText.includes('onde vou trabalhar') &&
+    rowText.includes('energias existentes') &&
+    rowText.includes('o que devera ser isolado')
+  );
 }
 
 function isAdministrativeRow(row: string[]): boolean {
@@ -174,87 +207,113 @@ function extractMeta(rows: string[][], sheetName: string, supervisao: Supervisao
     area: area || sheetName,
     revision,
     updatedAt,
-    pdfPath: `datamatriz/pdf/${supervisao}/${sheetName}.pdf`,
+    pdfPath: `/datamatriz/pdf/${supervisao}/${sheetName}.pdf`,
   };
+}
+
+function appendValues(target: string[], values: string[]): string[] {
+  return uniqueNonEmpty([...target, ...values]);
 }
 
 function parseSheet(rows: string[][], sheetName: string, supervisao: SupervisaoTipo): MatrizArquivo {
   const meta = extractMeta(rows, sheetName, supervisao);
-  const headerRows = findHeaderRows(rows);
 
-  if (!headerRows.length) {
-    throw new Error(`Cabeçalho da tabela não encontrado na aba ${sheetName}.`);
-  }
+  const grouped = new Map<string, MatrizItem>();
+  let inTable = false;
+  let currentEquipmentKey = '';
 
-  const items: MatrizItem[] = [];
-  let current: MatrizItem | null = null;
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
 
-  for (const headerIndex of headerRows) {
-    for (let i = headerIndex + 1; i < rows.length; i += 1) {
-      const row = rows[i];
-      const colA = cellToString(row[0]);
-      const colB = cellToString(row[1]);
-      const colC = cellToString(row[2]);
-      const colD = cellToString(row[3]);
-      const colE = cellToString(row[4]);
-      const colF = cellToString(row[5]);
-      const colG = cellToString(row[6]);
-      const colH = cellToString(row[7]);
-      const colI = cellToString(row[8]);
-      const colJ = cellToString(row[9]);
+    if (isHeaderRow(row)) {
+      inTable = true;
+      currentEquipmentKey = '';
+      continue;
+    }
 
-      if (isAdministrativeRow(row)) {
-        current = null;
-        continue;
-      }
+    if (!inTable) continue;
 
-      const rowText = [colA, colB, colC, colD, colE, colF, colG, colH, colI, colJ]
-        .join(' ')
-        .trim();
+    if (isAdministrativeRow(row)) {
+      currentEquipmentKey = '';
+      continue;
+    }
 
-      if (!rowText) continue;
+    const colA = cellToString(row[0]);
+    const colB = cellToString(row[1]);
+    const colC = cellToString(row[2]);
+    const colD = cellToString(row[3]);
+    const colE = cellToString(row[4]);
+    const colF = cellToString(row[5]);
+    const colG = cellToString(row[6]);
+    const colH = cellToString(row[7]);
+    const colI = cellToString(row[8]);
+    const colJ = cellToString(row[9]);
 
-      const combinedIsolation = [colD, colE, colF, colG].filter(Boolean).join('\n');
-      const combinedProcedure = [colH, colI, colJ].filter(Boolean).join('\n');
+    const rowText = [colA, colB, colC, colD, colE, colF, colG, colH, colI, colJ]
+      .join(' ')
+      .trim();
 
-      const startsNewItem =
-        (!!colB && (Boolean(colA) || !current)) &&
-        !normalizeSearchText(colB).includes('equipe multidisciplinar');
+    if (!rowText) continue;
 
-      if (startsNewItem) {
-        current = {
+    const combinedIsolation = [colD, colE, colF, colG].filter(Boolean).join('\n');
+    const combinedProcedure = [colH, colI, colJ].filter(Boolean).join('\n');
+
+    const equipmentIsValid = looksLikeEquipmentCode(colB);
+
+    if (equipmentIsValid) {
+      const key = normalizeEquipmentCode(colB);
+      currentEquipmentKey = key;
+
+      const existing = grouped.get(key);
+
+      if (existing) {
+        existing.energies = appendValues(existing.energies, splitMultilineText(colC));
+        existing.isolationTargets = appendValues(
+          existing.isolationTargets,
+          splitMultilineText(combinedIsolation),
+        );
+        existing.procedures = appendValues(
+          existing.procedures,
+          splitMultilineText(combinedProcedure),
+        );
+      } else {
+        grouped.set(key, {
           itemNumber: Number(colA) || undefined,
           equipment: colB,
-          equipmentSearchKey: normalizeSearchText(colB),
+          equipmentSearchKey: key,
           energies: uniqueNonEmpty(splitMultilineText(colC)),
           isolationTargets: uniqueNonEmpty(splitMultilineText(combinedIsolation)),
           procedures: uniqueNonEmpty(splitMultilineText(combinedProcedure)),
           notes: [],
-        };
-
-        items.push(current);
-        continue;
+        });
       }
 
-      if (!current) continue;
-
-      current.energies = uniqueNonEmpty([...current.energies, ...splitMultilineText(colC)]);
-      current.isolationTargets = uniqueNonEmpty([
-        ...current.isolationTargets,
-        ...splitMultilineText(combinedIsolation),
-      ]);
-      current.procedures = uniqueNonEmpty([
-        ...current.procedures,
-        ...splitMultilineText(combinedProcedure),
-      ]);
+      continue;
     }
+
+    if (!currentEquipmentKey) continue;
+
+    const current = grouped.get(currentEquipmentKey);
+    if (!current) continue;
+
+    current.energies = appendValues(current.energies, splitMultilineText(colC));
+    current.isolationTargets = appendValues(
+      current.isolationTargets,
+      splitMultilineText(combinedIsolation),
+    );
+    current.procedures = appendValues(
+      current.procedures,
+      splitMultilineText(combinedProcedure),
+    );
   }
+
+  const items = Array.from(grouped.values())
+    .filter((item) => item.equipment && (item.isolationTargets.length || item.procedures.length))
+    .sort((a, b) => a.equipment.localeCompare(b.equipment, 'pt-BR'));
 
   return {
     ...meta,
-    items: items.filter(
-      (item) => item.equipment && (item.isolationTargets.length || item.procedures.length),
-    ),
+    items,
   };
 }
 
@@ -282,7 +341,9 @@ function readWorkbook(filePath: string, supervisao: SupervisaoTipo): MatrizArqui
     const matrix = parseSheet(rows, sheetName, supervisao);
     matrices.push(matrix);
 
-    console.log(`[OK] ${supervisao} / ${sheetName} -> ${matrix.items.length} equipamentos processados.`);
+    console.log(
+      `[OK] ${supervisao} / ${sheetName} -> ${matrix.items.length} equipamentos consolidados.`,
+    );
   }
 
   return matrices;
@@ -304,7 +365,12 @@ function buildCatalog(matrices: MatrizArquivo[], version: string, updatedAt: str
         pdfPath: matrix.pdfPath,
         equipmentCount: matrix.items.length,
       }))
-      .sort((a, b) => a.code.localeCompare(b.code, 'pt-BR')),
+      .sort((a, b) => {
+        if (a.supervisao !== b.supervisao) {
+          return a.supervisao.localeCompare(b.supervisao);
+        }
+        return a.code.localeCompare(b.code, 'pt-BR');
+      }),
   };
 }
 
