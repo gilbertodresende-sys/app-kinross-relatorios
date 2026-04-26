@@ -1,5 +1,14 @@
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+import UserMenu from '../components/UserMenu';
 
 export default function HomeScreen({
   onOpenWeather,
@@ -8,42 +17,48 @@ export default function HomeScreen({
 }) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Manutenção Elétrica Planta 2</Text>
-          <Text style={styles.subtitle}>
-            Selecione uma funcionalidade disponível.
-          </Text>
-        </View>
+      <View style={styles.screen}>
+        <UserMenu />
 
-        <Pressable style={styles.card} onPress={onOpenRelatorioTurno}>
-          <Text style={styles.cardTitle}>Relatório do Turno</Text>
-          <Text style={styles.cardDescription}>
-            Elaborar, salvar, consultar e enviar relatórios de turno por e-mail.
-          </Text>
-        </Pressable>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.header}>
+            <View style={styles.headerTextArea}>
+              <Text style={styles.title}>Manutenção Elétrica Planta 2</Text>
+              <Text style={styles.subtitle}>
+                Selecione uma funcionalidade disponível.
+              </Text>
+            </View>
+          </View>
 
-        <Pressable style={styles.card} onPress={onOpenMatrizIsolamento}>
-          <Text style={styles.cardTitle}>Matriz de Isolamento</Text>
-          <Text style={styles.cardDescription}>
-            Consultar fontes de energia, pontos de bloqueio, forma de isolamento e PDF oficial da matriz.
-          </Text>
-        </Pressable>
+          <Pressable style={styles.card} onPress={onOpenRelatorioTurno}>
+            <Text style={styles.cardTitle}>Relatório do Turno</Text>
+            <Text style={styles.cardDescription}>
+              Elaborar, salvar, consultar e enviar relatórios de turno por e-mail.
+            </Text>
+          </Pressable>
 
-        <Pressable style={[styles.card, styles.cardDisabled]} disabled>
-          <Text style={styles.cardTitle}>Visualizar OS</Text>
-          <Text style={styles.cardDescription}>
-            Funcionalidade futura a ser desenvolvida.
-          </Text>
-        </Pressable>
+          <Pressable style={styles.card} onPress={onOpenMatrizIsolamento}>
+            <Text style={styles.cardTitle}>Matriz de Isolamento</Text>
+            <Text style={styles.cardDescription}>
+              Consultar fontes de energia, pontos de bloqueio, forma de isolamento e PDF oficial da matriz.
+            </Text>
+          </Pressable>
 
-        <Pressable style={styles.card} onPress={onOpenWeather}>
-          <Text style={styles.cardTitle}>Previsão do Tempo</Text>
-          <Text style={styles.cardDescription}>
-            Consultar condições climáticas e previsão para apoio operacional.
-          </Text>
-        </Pressable>
-      </ScrollView>
+          <Pressable style={[styles.card, styles.cardDisabled]} disabled>
+            <Text style={styles.cardTitle}>Visualizar OS</Text>
+            <Text style={styles.cardDescription}>
+              Funcionalidade futura a ser desenvolvida.
+            </Text>
+          </Pressable>
+
+          <Pressable style={styles.card} onPress={onOpenWeather}>
+            <Text style={styles.cardTitle}>Previsão do Tempo</Text>
+            <Text style={styles.cardDescription}>
+              Consultar condições climáticas e previsão para apoio operacional.
+            </Text>
+          </Pressable>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -53,13 +68,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F3F6F9',
   },
+  screen: {
+    flex: 1,
+    backgroundColor: '#F3F6F9',
+  },
   content: {
     padding: 20,
     gap: 16,
+    paddingBottom: 32,
   },
   header: {
     marginTop: 12,
     marginBottom: 8,
+    paddingRight: 62,
+  },
+  headerTextArea: {
+    flex: 1,
   },
   title: {
     fontSize: 28,

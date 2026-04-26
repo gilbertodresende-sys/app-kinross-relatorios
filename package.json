@@ -4,6 +4,7 @@
     "@react-native-picker/picker": "^2.11.4",
     "babel-preset-expo": "~54.0.10",
     "expo": "^55.0.17",
+    "expo-constants": "~55.0.15",
     "expo-file-system": "~55.0.17",
     "expo-image-picker": "~55.0.19",
     "expo-intent-launcher": "~55.0.12",
