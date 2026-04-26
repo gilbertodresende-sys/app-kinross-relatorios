@@ -7,6 +7,12 @@ export interface ManifestMatriz {
   pdfBaseUrl?: string;
 }
 
+export interface MatrizIsolationPair {
+  energy: string;
+  target: string;
+  procedure: string;
+}
+
 export interface MatrizItem {
   itemNumber?: number;
   equipment: string;
@@ -14,6 +20,7 @@ export interface MatrizItem {
   energies: string[];
   isolationTargets: string[];
   procedures: string[];
+  isolationPairs: MatrizIsolationPair[];
   notes?: string[];
 }
 
@@ -45,6 +52,24 @@ export interface MatrizCatalogoItem {
   updatedAt?: string;
   pdfPath?: string;
   equipmentCount: number;
+}
+
+export interface MatrizResumo {
+  id: string;
+  code: string;
+  name: string;
+  supervisao: SupervisaoTipo;
+  area?: string;
+  revision?: string;
+  updatedAt?: string;
+  pdfPath?: string;
+  equipmentCount: number;
+}
+
+export interface CatalogoMatrizes {
+  version: string;
+  updatedAt: string;
+  matrices: MatrizResumo[];
 }
 
 export interface OptionItem {

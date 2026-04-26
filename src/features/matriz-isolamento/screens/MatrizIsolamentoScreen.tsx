@@ -42,16 +42,9 @@ export default function MatrizIsolamentoScreen({
     matrixOptions,
     equipmentOptions,
     clearSelection,
-    reloadCatalog,
   } = useMatrizData();
 
-  const { sync, isSyncing, syncMessage, lastSyncedAt } = useMatrizSync();
-
-  const handleRefresh = useCallback(async () => {
-    const result = await sync();
-    await reloadCatalog();
-    Alert.alert('Matrizes', result.message);
-  }, [reloadCatalog, sync]);
+  useMatrizSync();
 
   const handleOpenPdf = useCallback(async () => {
     if (!selectedMatrix) {
@@ -143,13 +136,7 @@ export default function MatrizIsolamentoScreen({
 
         <PdfActionsCard
           onOpenPdf={handleOpenPdf}
-          onRefresh={handleRefresh}
-          isRefreshing={isSyncing}
-          syncMessage={
-            lastSyncedAt
-              ? `${syncMessage} Última referência: ${lastSyncedAt}`
-              : syncMessage
-          }
+          showRefreshButton={false}
         />
       </ScrollView>
     </SafeAreaView>

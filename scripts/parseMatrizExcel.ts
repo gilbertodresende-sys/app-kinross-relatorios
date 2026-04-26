@@ -5,6 +5,12 @@ import XLSX from 'xlsx';
 
 type SupervisaoTipo = 'eletrica' | 'instrumentacao';
 
+interface MatrizIsolationPair {
+  energy: string;
+  target: string;
+  procedure: string;
+}
+
 interface MatrizItem {
   itemNumber?: number;
   equipment: string;
@@ -12,6 +18,7 @@ interface MatrizItem {
   energies: string[];
   isolationTargets: string[];
   procedures: string[];
+  isolationPairs: MatrizIsolationPair[];
   notes?: string[];
 }
 
@@ -66,17 +73,11 @@ function stripAccents(value: string): string {
 }
 
 function normalizeSearchText(value: string): string {
-  return stripAccents(value)
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim();
+  return stripAccents(value).toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
 function normalizeEquipmentCode(value: string): string {
-  return stripAccents(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-    .trim();
+  return stripAccents(value).toLowerCase().replace(/[^a-z0-9]/g, '').trim();
 }
 
 function splitMultilineText(value: string): string[] {
@@ -104,9 +105,44 @@ function uniqueNonEmpty(values: string[]): string[] {
   return result;
 }
 
+function uniquePairs(values: MatrizIsolationPair[]): MatrizIsolationPair[] {
+  const seen = new Set<string>();
+  const result: MatrizIsolationPair[] = [];
+
+  for (const pair of values) {
+    const energy = normalizeWhitespace(pair.energy);
+    const target = normalizeWhitespace(pair.target);
+    const procedure = normalizeWhitespace(pair.procedure);
+
+    if (!energy && !target && !procedure) continue;
+
+    const key = [
+      normalizeSearchText(energy),
+      normalizeSearchText(target),
+      normalizeSearchText(procedure),
+    ].join('|||');
+
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    result.push({
+      energy,
+      target,
+      procedure,
+    });
+  }
+
+  return result;
+}
+
 function cellToString(value: unknown): string {
   if (value == null) return '';
   return normalizeWhitespace(String(value));
+}
+
+function isNumericSequence(value: string): boolean {
+  const raw = normalizeWhitespace(value);
+  return /^\d+$/.test(raw);
 }
 
 function looksLikeEquipmentCode(value: string): boolean {
@@ -115,14 +151,6 @@ function looksLikeEquipmentCode(value: string): boolean {
 
   const normalized = normalizeEquipmentCode(raw);
   if (!normalized) return false;
-
-  const hasLetter = /[a-z]/i.test(raw);
-  const hasNumber = /\d/.test(raw);
-  const hasSpace = /\s/.test(raw);
-
-  if (!hasLetter || !hasNumber) return false;
-  if (hasSpace) return false;
-  if (normalized.length < 4) return false;
 
   const invalidTerms = [
     'registro',
@@ -135,13 +163,14 @@ function looksLikeEquipmentCode(value: string): boolean {
     'referenciabibliografica',
     'aprovacaodamatriz',
     'definicoesdasenergias',
+    'pagina',
   ];
 
   if (invalidTerms.some((term) => normalized.includes(term))) {
     return false;
   }
 
-  return true;
+  return /[a-z]/i.test(raw) && /\d/.test(raw);
 }
 
 function isHeaderRow(row: string[]): boolean {
@@ -215,26 +244,47 @@ function appendValues(target: string[], values: string[]): string[] {
   return uniqueNonEmpty([...target, ...values]);
 }
 
+function appendPairs(target: MatrizIsolationPair[], values: MatrizIsolationPair[]): MatrizIsolationPair[] {
+  return uniquePairs([...target, ...values]);
+}
+
+function buildRowPairs(energy: string, targetColumns: string[], procedureColumns: string[]): MatrizIsolationPair[] {
+  const maxLen = Math.max(targetColumns.length, procedureColumns.length);
+  const pairs: MatrizIsolationPair[] = [];
+
+  for (let i = 0; i < maxLen; i += 1) {
+    const target = targetColumns[i] ?? '';
+    const procedure = procedureColumns[i] ?? '';
+
+    if (!target && !procedure && !energy) continue;
+
+    pairs.push({
+      energy,
+      target,
+      procedure,
+    });
+  }
+
+  return uniquePairs(pairs);
+}
+
 function parseSheet(rows: string[][], sheetName: string, supervisao: SupervisaoTipo): MatrizArquivo {
   const meta = extractMeta(rows, sheetName, supervisao);
 
   const grouped = new Map<string, MatrizItem>();
-  let inTable = false;
   let currentEquipmentKey = '';
+  let currentItemNumber: number | undefined;
 
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
 
     if (isHeaderRow(row)) {
-      inTable = true;
-      currentEquipmentKey = '';
       continue;
     }
 
-    if (!inTable) continue;
-
     if (isAdministrativeRow(row)) {
       currentEquipmentKey = '';
+      currentItemNumber = undefined;
       continue;
     }
 
@@ -249,41 +299,45 @@ function parseSheet(rows: string[][], sheetName: string, supervisao: SupervisaoT
     const colI = cellToString(row[8]);
     const colJ = cellToString(row[9]);
 
-    const rowText = [colA, colB, colC, colD, colE, colF, colG, colH, colI, colJ]
-      .join(' ')
-      .trim();
-
+    const rowText = [colA, colB, colC, colD, colE, colF, colG, colH, colI, colJ].join(' ').trim();
     if (!rowText) continue;
 
-    const combinedIsolation = [colD, colE, colF, colG].filter(Boolean).join('\n');
-    const combinedProcedure = [colH, colI, colJ].filter(Boolean).join('\n');
+    const hasSequence = isNumericSequence(colA);
+    const hasEquipment = looksLikeEquipmentCode(colB);
 
-    const equipmentIsValid = looksLikeEquipmentCode(colB);
+    const targetColumns = [colD, colE, colF, colG].filter(Boolean);
+    const procedureColumns = [colH, colI, colJ].filter(Boolean);
+    const rowPairs = buildRowPairs(colC, targetColumns, procedureColumns);
+    const combinedIsolation = targetColumns.join('\n');
+    const combinedProcedure = procedureColumns.join('\n');
 
-    if (equipmentIsValid) {
+    const startsNewEquipment = hasSequence && hasEquipment;
+
+    if (startsNewEquipment) {
       const key = normalizeEquipmentCode(colB);
       currentEquipmentKey = key;
+      currentItemNumber = Number(colA) || undefined;
 
       const existing = grouped.get(key);
 
       if (existing) {
         existing.energies = appendValues(existing.energies, splitMultilineText(colC));
-        existing.isolationTargets = appendValues(
-          existing.isolationTargets,
-          splitMultilineText(combinedIsolation),
-        );
-        existing.procedures = appendValues(
-          existing.procedures,
-          splitMultilineText(combinedProcedure),
-        );
+        existing.isolationTargets = appendValues(existing.isolationTargets, splitMultilineText(combinedIsolation));
+        existing.procedures = appendValues(existing.procedures, splitMultilineText(combinedProcedure));
+        existing.isolationPairs = appendPairs(existing.isolationPairs, rowPairs);
+
+        if (!existing.itemNumber && currentItemNumber) {
+          existing.itemNumber = currentItemNumber;
+        }
       } else {
         grouped.set(key, {
-          itemNumber: Number(colA) || undefined,
+          itemNumber: currentItemNumber,
           equipment: colB,
           equipmentSearchKey: key,
           energies: uniqueNonEmpty(splitMultilineText(colC)),
           isolationTargets: uniqueNonEmpty(splitMultilineText(combinedIsolation)),
           procedures: uniqueNonEmpty(splitMultilineText(combinedProcedure)),
+          isolationPairs: uniquePairs(rowPairs),
           notes: [],
         });
       }
@@ -291,25 +345,57 @@ function parseSheet(rows: string[][], sheetName: string, supervisao: SupervisaoT
       continue;
     }
 
-    if (!currentEquipmentKey) continue;
+    const isContinuationRow =
+      !!currentEquipmentKey &&
+      !hasEquipment &&
+      !isHeaderRow(row) &&
+      !isAdministrativeRow(row) &&
+      (!!colC || targetColumns.length > 0 || procedureColumns.length > 0);
+
+    if (!isContinuationRow) {
+      continue;
+    }
 
     const current = grouped.get(currentEquipmentKey);
     if (!current) continue;
 
     current.energies = appendValues(current.energies, splitMultilineText(colC));
-    current.isolationTargets = appendValues(
-      current.isolationTargets,
-      splitMultilineText(combinedIsolation),
-    );
-    current.procedures = appendValues(
-      current.procedures,
-      splitMultilineText(combinedProcedure),
-    );
+    current.isolationTargets = appendValues(current.isolationTargets, splitMultilineText(combinedIsolation));
+    current.procedures = appendValues(current.procedures, splitMultilineText(combinedProcedure));
+    current.isolationPairs = appendPairs(current.isolationPairs, rowPairs);
   }
 
   const items = Array.from(grouped.values())
-    .filter((item) => item.equipment && (item.isolationTargets.length || item.procedures.length))
-    .sort((a, b) => a.equipment.localeCompare(b.equipment, 'pt-BR'));
+    .map((item) => ({
+      ...item,
+      energies: uniqueNonEmpty(
+        item.isolationPairs.length
+          ? item.isolationPairs.map((pair) => pair.energy).filter(Boolean)
+          : item.energies,
+      ),
+      isolationTargets: uniqueNonEmpty(
+        item.isolationPairs.length
+          ? item.isolationPairs.map((pair) => pair.target).filter(Boolean)
+          : item.isolationTargets,
+      ),
+      procedures: uniqueNonEmpty(
+        item.isolationPairs.length
+          ? item.isolationPairs.map((pair) => pair.procedure).filter(Boolean)
+          : item.procedures,
+      ),
+      isolationPairs: uniquePairs(item.isolationPairs),
+    }))
+    .filter(
+      (item) =>
+        item.equipment &&
+        (item.isolationPairs.length || item.isolationTargets.length || item.procedures.length),
+    )
+    .sort((a, b) => {
+      const aNum = a.itemNumber ?? Number.MAX_SAFE_INTEGER;
+      const bNum = b.itemNumber ?? Number.MAX_SAFE_INTEGER;
+      if (aNum !== bNum) return aNum - bNum;
+      return a.equipment.localeCompare(b.equipment, 'pt-BR');
+    });
 
   return {
     ...meta,

@@ -4,9 +4,10 @@ import { matrizTheme } from '../utils/theme';
 
 interface PdfActionsCardProps {
   onOpenPdf: () => Promise<void>;
-  onRefresh: () => Promise<void>;
+  onRefresh?: () => Promise<void>;
   isRefreshing?: boolean;
   syncMessage?: string;
+  showRefreshButton?: boolean;
 }
 
 export function PdfActionsCard({
@@ -14,6 +15,7 @@ export function PdfActionsCard({
   onRefresh,
   isRefreshing,
   syncMessage,
+  showRefreshButton = false,
 }: PdfActionsCardProps) {
   async function handleOpenPdf() {
     try {
@@ -24,6 +26,8 @@ export function PdfActionsCard({
   }
 
   async function handleRefresh() {
+    if (!onRefresh) return;
+
     try {
       await onRefresh();
     } catch (error) {
@@ -39,13 +43,17 @@ export function PdfActionsCard({
         <Text style={styles.primaryButtonText}>Abrir PDF oficial</Text>
       </Pressable>
 
-      <Pressable style={styles.secondaryButton} onPress={handleRefresh} disabled={isRefreshing}>
-        <Text style={styles.secondaryButtonText}>
-          {isRefreshing ? 'Atualizando...' : 'Atualizar matrizes'}
-        </Text>
-      </Pressable>
+      {showRefreshButton && !!onRefresh && (
+        <Pressable style={styles.secondaryButton} onPress={handleRefresh} disabled={isRefreshing}>
+          <Text style={styles.secondaryButtonText}>
+            {isRefreshing ? 'Atualizando...' : 'Atualizar matrizes'}
+          </Text>
+        </Pressable>
+      )}
 
-      {!!syncMessage && <Text style={styles.syncMessage}>{syncMessage}</Text>}
+      {!!syncMessage && showRefreshButton && (
+        <Text style={styles.syncMessage}>{syncMessage}</Text>
+      )}
     </View>
   );
 }

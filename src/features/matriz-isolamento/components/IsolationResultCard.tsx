@@ -40,6 +40,41 @@ function SectionList({
   );
 }
 
+function IsolationPairsTable({ item }: { item: MatrizItem }) {
+  if (!item.isolationPairs?.length) {
+    return (
+      <>
+        <SectionList title="Energias existentes" values={item.energies} tone="neutral" />
+        <SectionList title="O que deverá ser isolado" values={item.isolationTargets} tone="warning" />
+        <SectionList title="Como fazer o isolamento" values={item.procedures} tone="success" />
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.tableWrapper}>
+      <Text style={styles.tableTitle}>Tabela de isolamento</Text>
+
+      <View style={styles.tableHeader}>
+        <Text style={[styles.tableHeaderText, styles.energyColumn]}>Energia existente</Text>
+        <Text style={[styles.tableHeaderText, styles.targetColumn]}>O que deverá ser isolado</Text>
+        <Text style={[styles.tableHeaderText, styles.procedureColumn]}>Como fazer o isolamento</Text>
+      </View>
+
+      {item.isolationPairs.map((pair, index) => (
+        <View
+          key={`${pair.energy}-${pair.target}-${pair.procedure}-${index}`}
+          style={[styles.tableRow, index % 2 === 0 ? styles.tableRowEven : styles.tableRowOdd]}
+        >
+          <Text style={[styles.tableCellText, styles.energyColumn]}>{pair.energy || '-'}</Text>
+          <Text style={[styles.tableCellText, styles.targetColumn]}>{pair.target || '-'}</Text>
+          <Text style={[styles.tableCellText, styles.procedureColumn]}>{pair.procedure || '-'}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export function IsolationResultCard({
   item,
   revision,
@@ -58,9 +93,7 @@ export function IsolationResultCard({
         <Text style={styles.infoValue}>{item.equipment}</Text>
       </View>
 
-      <SectionList title="Energias existentes" values={item.energies} tone="neutral" />
-      <SectionList title="O que deverá ser isolado" values={item.isolationTargets} tone="warning" />
-      <SectionList title="Como fazer o isolamento" values={item.procedures} tone="success" />
+      <IsolationPairsTable item={item} />
 
       {!!item.notes?.length && (
         <SectionList title="Observações" values={item.notes} tone="neutral" />
@@ -158,6 +191,63 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 22,
     color: matrizTheme.colors.text,
+  },
+  tableWrapper: {
+    marginHorizontal: matrizTheme.spacing.md,
+    marginTop: matrizTheme.spacing.md,
+    borderWidth: 1,
+    borderColor: matrizTheme.colors.border,
+    borderRadius: matrizTheme.radius.md,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
+  },
+  tableTitle: {
+    fontWeight: '700',
+    fontSize: 15,
+    color: matrizTheme.colors.text,
+    paddingHorizontal: matrizTheme.spacing.md,
+    paddingTop: matrizTheme.spacing.md,
+    paddingBottom: 10,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: matrizTheme.colors.primaryLight,
+    borderTopWidth: 1,
+    borderTopColor: matrizTheme.colors.border,
+    borderBottomWidth: 1,
+    borderBottomColor: matrizTheme.colors.border,
+  },
+  tableHeaderText: {
+    fontWeight: '700',
+    color: matrizTheme.colors.primaryDark,
+    padding: 12,
+    fontSize: 13,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EDF2',
+  },
+  tableRowEven: {
+    backgroundColor: '#FFFFFF',
+  },
+  tableRowOdd: {
+    backgroundColor: '#FAFBFC',
+  },
+  tableCellText: {
+    padding: 12,
+    fontSize: 13,
+    lineHeight: 19,
+    color: matrizTheme.colors.text,
+  },
+  energyColumn: {
+    flex: 0.75,
+  },
+  targetColumn: {
+    flex: 1.1,
+  },
+  procedureColumn: {
+    flex: 1.1,
   },
   footer: {
     marginTop: matrizTheme.spacing.md,

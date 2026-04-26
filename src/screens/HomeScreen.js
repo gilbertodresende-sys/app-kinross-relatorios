@@ -1,7 +1,11 @@
 import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-export default function HomeScreen({ onOpenWeather, onOpenMatrizIsolamento }) {
+export default function HomeScreen({
+  onOpenWeather,
+  onOpenMatrizIsolamento,
+  onOpenRelatorioTurno,
+}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -12,10 +16,10 @@ export default function HomeScreen({ onOpenWeather, onOpenMatrizIsolamento }) {
           </Text>
         </View>
 
-        <Pressable style={styles.card} onPress={onOpenWeather}>
-          <Text style={styles.cardTitle}>Previsão do Tempo</Text>
+        <Pressable style={styles.card} onPress={onOpenRelatorioTurno}>
+          <Text style={styles.cardTitle}>Relatório do Turno</Text>
           <Text style={styles.cardDescription}>
-            Consultar condições climáticas e previsão para apoio operacional.
+            Elaborar, salvar, consultar e enviar relatórios de turno por e-mail.
           </Text>
         </Pressable>
 
@@ -23,6 +27,20 @@ export default function HomeScreen({ onOpenWeather, onOpenMatrizIsolamento }) {
           <Text style={styles.cardTitle}>Matriz de Isolamento</Text>
           <Text style={styles.cardDescription}>
             Consultar fontes de energia, pontos de bloqueio, forma de isolamento e PDF oficial da matriz.
+          </Text>
+        </Pressable>
+
+        <Pressable style={[styles.card, styles.cardDisabled]} disabled>
+          <Text style={styles.cardTitle}>Visualizar OS</Text>
+          <Text style={styles.cardDescription}>
+            Funcionalidade futura a ser desenvolvida.
+          </Text>
+        </Pressable>
+
+        <Pressable style={styles.card} onPress={onOpenWeather}>
+          <Text style={styles.cardTitle}>Previsão do Tempo</Text>
+          <Text style={styles.cardDescription}>
+            Consultar condições climáticas e previsão para apoio operacional.
           </Text>
         </Pressable>
       </ScrollView>
@@ -65,6 +83,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
+  },
+  cardDisabled: {
+    opacity: 0.5,
   },
   cardTitle: {
     fontSize: 18,
